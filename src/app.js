@@ -15,6 +15,7 @@
     self.timeout = 5000
     self.pending = 0
 
+
     self.setMaxRetries = function (max) {
       self.maxRetries = max
     }
@@ -41,10 +42,12 @@
           retryer.emit()
         },
 
-        request: function (config) {
+        request: function (request) {
           self.pending++
-          config.timeout = self.timeout
-          return config
+          request.timeout = self.timeout
+          if(request.config?.timeout) request.timeout = request.config.timeout
+          if(request.config?.noRetries) self.maxRetries = 0
+          return request
         },
 
         response: function (response) {
